@@ -33,7 +33,7 @@ BuildRequires:	ghc-transformers-prof >= 0.2
 BuildRequires:	ghc-transformers-prof < 0.4
 %endif
 BuildRequires:	rpmbuild(macros) >= 1.608
-%requires_releq	ghc
+%requires_eq	ghc
 Requires(post,postun):	/usr/bin/ghc-pkg
 Requires:	ghc-base < 4.8
 Requires:	ghc-extensible-exceptions >= 0.1
