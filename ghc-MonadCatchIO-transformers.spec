@@ -6,42 +6,31 @@
 Summary:	Monad-transformer compatible version of the Control.Exception module
 Summary(pl.UTF-8):	Wersja modułu Control.Exception zgodna z transformatorami monad
 Name:		ghc-%{pkgname}
-Version:	0.3.1.0
+Version:	0.3.1.3
 Release:	1
 License:	BSD
 Group:		Development/Languages
 #Source0Download: http://hackage.haskell.org/package/MonadCatchIO-transformers
 Source0:	http://hackage.haskell.org/package/%{pkgname}-%{version}/%{pkgname}-%{version}.tar.gz
-# Source0-md5:	3b54254de4a192fdbdea06d2950cac8d
+# Source0-md5:	84386619d16f7a86e4e1a5230918a10f
+Patch0:		ghc-8.10.patch
 URL:		http://hackage.haskell.org/package/MonadCatchIO-transformers
 BuildRequires:	ghc >= 6.12.3
-BuildRequires:	ghc-base < 4.8
 BuildRequires:	ghc-extensible-exceptions >= 0.1
-BuildRequires:	ghc-extensible-exceptions < 0.2
 BuildRequires:	ghc-monads-tf >= 0.1
-BuildRequires:	ghc-monads-tf < 0.2
 BuildRequires:	ghc-transformers >= 0.2
-BuildRequires:	ghc-transformers < 0.4
 %if %{with prof}
 BuildRequires:	ghc-prof >= 6.12.3
-BuildRequires:	ghc-base-prof < 4.8
 BuildRequires:	ghc-extensible-exceptions-prof >= 0.1
-BuildRequires:	ghc-extensible-exceptions-prof < 0.2
 BuildRequires:	ghc-monads-tf-prof >= 0.1
-BuildRequires:	ghc-monads-tf-prof < 0.2
 BuildRequires:	ghc-transformers-prof >= 0.2
-BuildRequires:	ghc-transformers-prof < 0.4
 %endif
 BuildRequires:	rpmbuild(macros) >= 1.608
 %requires_eq	ghc
 Requires(post,postun):	/usr/bin/ghc-pkg
-Requires:	ghc-base < 4.8
 Requires:	ghc-extensible-exceptions >= 0.1
-Requires:	ghc-extensible-exceptions < 0.2
 Requires:	ghc-monads-tf >= 0.1
-Requires:	ghc-monads-tf < 0.2
 Requires:	ghc-transformers >= 0.2
-Requires:	ghc-transformers < 0.4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # debuginfo is not useful for ghc
@@ -70,13 +59,9 @@ Summary:	Profiling %{pkgname} library for GHC
 Summary(pl.UTF-8):	Biblioteka profilująca %{pkgname} dla GHC.
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	ghc-base-prof < 4.8
 Requires:	ghc-extensible-exceptions-prof >= 0.1
-Requires:	ghc-extensible-exceptions-prof < 0.2
 Requires:	ghc-monads-tf-prof >= 0.1
-Requires:	ghc-monads-tf-prof < 0.2
 Requires:	ghc-transformers-prof >= 0.2
-Requires:	ghc-transformers-prof < 0.4
 
 %description prof
 Profiling %{pkgname} library for GHC.  Should be installed when
@@ -88,6 +73,7 @@ kiedy potrzebujemy systemu profilującego z GHC.
 
 %prep
 %setup -q -n %{pkgname}-%{version}
+%patch0 -p1
 
 %build
 runhaskell Setup.hs configure -v2 \
@@ -128,16 +114,19 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{name}-%{version}-doc/*
 %{_libdir}/%{ghcdir}/package.conf.d/%{pkgname}.conf
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}
-%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/HSMonadCatchIO-transformers-%{version}.o
-%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSMonadCatchIO-transformers-%{version}.a
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSMonadCatchIO-transformers-%{version}-*.so
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSMonadCatchIO-transformers-%{version}-*.a
+%exclude %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSMonadCatchIO-transformers-%{version}-*_p.a
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Control
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Control/Monad
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Control/Monad/CatchIO.hi
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Control/Monad/CatchIO.dyn_hi
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Control/Monad/CatchIO
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Control/Monad/CatchIO/*.hi
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Control/Monad/CatchIO/*.dyn_hi
 
 %files prof
 %defattr(644,root,root,755)
-%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSMonadCatchIO-transformers-%{version}_p.a
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSMonadCatchIO-transformers-%{version}-*_p.a
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Control/Monad/CatchIO.p_hi
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Control/Monad/CatchIO/*.p_hi
