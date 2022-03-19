@@ -7,7 +7,7 @@ Summary:	Monad-transformer compatible version of the Control.Exception module
 Summary(pl.UTF-8):	Wersja modułu Control.Exception zgodna z transformatorami monad
 Name:		ghc-%{pkgname}
 Version:	0.3.1.3
-Release:	1
+Release:	2
 License:	BSD
 Group:		Development/Languages
 #Source0Download: http://hackage.haskell.org/package/MonadCatchIO-transformers
